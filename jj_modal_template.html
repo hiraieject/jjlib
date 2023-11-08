@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selectable Scrollable List</title>
+    <link rel="stylesheet" type="text/css" href="jj_modal.css">
+  </head>
+  <body>
+
+    <!-- <button onClick="MODAL_showModal('selector_test')">FileSelector</button> -->
+    <button onClick="MODAL_showModal('yesno_test')">YES/NO Dialog</button>
+    <button onClick="MODAL_showModal('input_test')">Input Dialog</button>
+    <button onClick="MODAL_showModal('editor_test')">Text Editor</button>
+    <button onClick="MODAL_showModal('viewer_test')">File Viewer</button>
+
+    <!-- ---------------------------------------------------------------------------------- -->
+    <script src="jj_modal.js"></script>
+    <script>
+      function MODAL_showModal(modalName)
+      {
+          if (modalName === 'yesno_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_YESNO);
+              modal_controller.set_btn1Function(() => {
+                  console.log('YES Clicked');
+                  return true;
+              });
+              modal_controller.set_btn2Function(() => {
+                  console.log('NO Clicked');
+                  return true;
+              });
+              modal_controller.dispString.message1 = 'test message line1\ntest message line2';
+              modal_controller.dispString.btn1 = 'test YES';
+              modal_controller.dispString.btn2 = 'test NO';
+              modal_controller.showModal();
+              
+          }
+          else if (modalName === 'input_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_INPUT);
+              modal_controller.set_btn1Function(() => {
+                  console.log('COMFIRME Clicked');
+                  console.log('input text = ' + modal_controller.get_inputText());
+                  return true;
+              });
+              modal_controller.set_btn2Function(() => {
+                  console.log('CANCEL Clicked');
+                  return true;
+              });
+              modal_controller.dispString.message1 = 'test message line1\ntest message line2';
+              modal_controller.dispString.btn1 = 'test CONFIRM';
+              modal_controller.dispString.btn2 = 'test CANCEL';
+              modal_controller.showModal();
+          }
+          else if (modalName === 'editor_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_EDITOR);
+              modal_controller.set_btn1Function(() => {
+                  console.log('SAVE Clicked');
+                  console.log('editor text = ' + modal_controller.get_editText());
+                  return true;
+              });
+              modal_controller.set_btn2Function(() => {
+                  console.log('CANCEL Clicked');
+                  return true;
+              });
+              modal_controller.dispString.message1 = 'Filename: test.txt';
+              modal_controller.dispString.editText = 'test\ntest\ntest';
+              modal_controller.showModal();
+
+          }
+          else if (modalName === 'viewer_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_VIEWER);
+              modal_controller.set_btn1Function(() => {
+                  console.log('CLOSE Clicked');
+                  return true;
+              });
+              modal_controller.dispString.message1 = 'LogFilename: test1_log.txt';
+              modal_controller.dispString.editText = 'test\ntest\ntest';
+              modal_controller.showModal();
+
+          }
+          else if (modalName === 'selector_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_SELECTOR);
+              modal_controller.showModal();
+
+          }
+          else if (modalName === 'messager_test') {
+              console.log(modalName);
+              modal_controller.set_modalType(modalType_MESSAGE);
+              modal_controller.showModal();
+          }
+      }
+      function MODAL_hideModal() {
+          modal_controller.hideModal();
+      }
+    </script>
+    <!-- ---------------------------------------------------------------------------------- -->
+    <!-- Message Modal -->
+    <div id="MODAL_messageDialog" class="MODAL_BG">
+      <div id="MODAL_messageDialog_window" class="MODAL_window">
+        <span id="MODAL_messageDialog_close" class="MODAL_close" data-modal="MODAL_messageDialog">&times;</span>
+        <p id="MODAL_messageDialog_message1" class="MODAL_messageArea"></p>
+        <p>
+          <button id="MODAL_messageDialog_btn1" STYLE="width: 40%;">BTN1</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Yes/No Modal -->
+    <div id="MODAL_yesNoDialog" class="MODAL_BG">
+      <div id="MODAL_yesNoDialog_window" class="MODAL_window">
+        <span id="MODAL_yesNoDialog_close" class="MODAL_close" data-modal="MODAL_yesNoDialog">&times;</span>
+        <p id="MODAL_yesNoDialog_message1" class="MODAL_messageArea"></p>
+        <p>
+          <button id="MODAL_yesNoDialog_btn1" STYLE="width: 30%;">BTN1</button>
+          <button id="MODAL_yesNoDialog_btn2" STYLE="width: 30%;">BTN2</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Input Modal -->
+    <div id="MODAL_inputDialog" class="MODAL_BG">
+      <div id="MODAL_inputDialog_window" class="MODAL_window">
+        <span id="MODAL_inputDialog_close" class="MODAL_close" data-modal="MODAL_inputDialog">&times;</span>
+        <p id="MODAL_inputDialog_message1" class="MODAL_messageArea"></p>
+        <input type="text" id="MODAL_inputDialog_inputtext" STYLE="width: 100%;">
+        <p>
+          <button id="MODAL_inputDialog_btn1" STYLE="width: 30%;">BTN1</button>
+          <button id="MODAL_inputDialog_btn2" STYLE="width: 30%;">BTN2</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Editor Modal -->
+    <div id="MODAL_editor" class="MODAL_BG">
+      <div id="MODAL_editor_window" class="MODAL_window">
+        <span id="MODAL_editor_close" class="MODAL_close" data-modal="MODAL_editor">&times;</span>
+	<br>
+	<span id="MODAL_editor_message1"></span><br>
+	<textarea name="MODAL-editArea" STYLE="width: 100%; height: 90%;" id="MODAL_editor_edittext"></textarea><br>
+        <button id="MODAL_editor_btn1">BTN1</button>
+        <button id="MODAL_editor_btn2">BTN2</button>
+      </div>
+    </div>
+
+    <!-- Viewer Modal -->
+    <div id="MODAL_viewer" class="MODAL_BG">
+      <div id="MODAL_viewer_window" class="MODAL_window">
+        <span id="MODAL_viewer_close" class="MODAL_close" data-modal="MODAL_viewer">&times;</span>
+	<br>
+	<span id="MODAL_viewer_message1"></span><br>
+	<textarea name="MODAL-editArea" STYLE="width: 100%; height: 90%;" id="MODAL_viewer_edittext" readonly></textarea><br>
+        <button id="MODAL_viewer_btn1">BTN1</button>
+      </div>
+    </div>
+
+    <!--File Selector Modal -->
+    <div id="MODAL_fileSelector" class="MODAL_BG">
+      <div id="MODAL_fileSelector_window" class="MODAL_window">
+        <span id="MODAL_fileSelector_close" class="MODAL_close" class="MODAL_close" data-modal="MODAL_fileSelector">&times;</span>
+        <div id="MODAL_fileSelector_lineList">
+          <!-- Items will be populated here -->
+        </div>
+        <input type="text" id="MODAL_fileSelector_selectedLine" readonly />
+        <div>
+          <button id="MODAL_fileSelector_btn1"> OK </button>
+          <button id="MODAL_fileSelector_btn2"> CANCEL </button>
+        </div>
+      </div>
+    </div>
+    <!-- ---------------------------------------------------------------------------------- -->
+
+  </body>
+</html>
+
