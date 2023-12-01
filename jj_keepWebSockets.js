@@ -5,6 +5,36 @@ const WSSTT_CONNECTED     = 'connected';
 const WSSTT_DISCONNECTING = 'disconnecting';
 const WSSTT_DISCONNECTED  = 'disconnected';
 
+class WsAction {
+    constructor(parameter = {}) {
+        this.parameter = {};
+        this.setParameter(parameter);
+    }
+
+    // パラメーターをセットする
+    setParameter(parameter) {
+        for (const key in parameter) {
+            this.parameter[key] = parameter[key];
+        }
+    }
+
+    // パラメーターを削除する
+    removeParameter(parameterName) {
+        delete this.parameter[parameterName];
+    }
+
+    // パラメーターをセットし、送信する（パラメーターは省略可能）
+    send(parameter = {}) {
+	if (keepws_controller.get_status() != WSSTT_CONNECTED) return; // 接続チェック
+        this.setParameter(parameter);
+        const jsonStr = JSON.stringify(this.parameter);
+        keepws_controller.send(jsonStr); // dict型をJSONに変換して送信
+        if (enableDbg_dumpSendData) {
+            console.log("Send: " + jsonStr);
+        }
+    }
+}
+
 class keepWsController {
 
     // コンストラクタ
@@ -12,7 +42,7 @@ class keepWsController {
         // イベントハンドラの this を固定
         this.opened    = this.opened.bind(this);
         this.closed    = this.closed.bind(this);
-        this.recieve   = this.recieve.bind(this);
+        this.receive   = this.receive.bind(this);
         this.error     = this.error.bind(this);
         
         // 個別ハンドラ処理の初期化
@@ -22,7 +52,7 @@ class keepWsController {
         this.set_closed_function((event) => {
             console.log("WebSocket closed:");
         });
-        this.set_recieve_function(null);
+        this.set_receive_function(null);
         this.set_error_function((error) => {
             console.error("WebSocket error:", error);
         });
@@ -89,8 +119,8 @@ class keepWsController {
     set_closed_function(fn) {
         this.closed_function = fn;
     };
-    set_recieve_function(fn) {
-        this.recieve_function = fn;
+    set_receive_function(fn) {
+        this.receive_function = fn;
     };
     set_error_function(fn) {
         this.error_function = fn;
@@ -101,7 +131,7 @@ class keepWsController {
     attachEventListeners() {
         this.ws.addEventListener("open", this.opened);
         this.ws.addEventListener("close", this.closed);
-        this.ws.addEventListener("message", this.recieve);
+        this.ws.addEventListener("message", this.receive);
         this.ws.addEventListener("error", this.error);
     }
     
@@ -109,7 +139,7 @@ class keepWsController {
     detachEventListeners() {
         this.ws.removeEventListener("open", this.opened);
         this.ws.removeEventListener("close", this.closed);
-        this.ws.removeEventListener("message", this.recieve);
+        this.ws.removeEventListener("message", this.receive);
         this.ws.removeEventListener("error", this.error);
     }
     
@@ -126,9 +156,9 @@ class keepWsController {
             this.closed_function(event);
         }
     }
-    recieve(event) {
-        if (this.recieve_function !== null) {
-            this.recieve_function(event);
+    receive(event) {
+        if (this.receive_function !== null) {
+            this.receive_function(event);
         }
     }
     error(error) {
@@ -186,13 +216,13 @@ const keepws_controller = new keepWsController();
 // 呼び側実装例
 /*
 
-function my_recieve(event) {
+function my_receive(event) {
     console.log(event.data);
 }
 
 function my_setupws() {
 
-    keepws_controller.set_recieve_function (my_recieve);
+    keepws_controller.set_receive_function (my_receive);
     
     const host = window.location.hostname;
     keepws_controller.start_connection (`ws://${host}/ws/`);

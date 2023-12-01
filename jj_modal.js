@@ -67,9 +67,6 @@ class modalController {
         this.set_modalCloseFunction(() => {
             return true;
         });
-        this.set_modalTabFunction(() => {
-            return true;
-        });
     }
 
     get_inputText() {
@@ -251,26 +248,6 @@ class modalController {
     set_modalCloseFunction(fn) {
         this.modalCloseFunction = fn;
     };
-    set_modalTabFunction(fn) {
-        this.modalTabFunction = fn;
-    };
-
-    set_enableTab2Space4() {
-        this.set_modalTabFunction((event) => {
-            if (event.key === 'Tab') {
-                event.preventDefault();
-                var start = event.target.selectionStart;
-                var end = event.target.selectionEnd;
-                
-                // タブ文字を挿入
-                event.target.value = event.target.value.substring(0, start) + '    ' + event.target.value.substring(end);
-                
-                // カーソルの位置を調整
-                event.target.selectionStart = event.target.selectionEnd = start + 4;
-            }
-            return true;
-        });
-    }
 
     // 画面部品イベントハンドラ処理
     btn1Handler() {
@@ -376,8 +353,8 @@ class modalController {
             this.addEventListenerToElement(this.id.btn3, 'click', this.btn3Handler);
             this.addEventListenerToElement(this.id.modalBg, 'click', this.modalBgHandler);
             this.addEventListenerToElement(this.id.modalClose, 'click', this.modalCloseHandler);
-            this.addEventListenerToElement(this.id.editText, 'keydown', this.modalTabHandler);
-            
+            this.addEventListenerToElement(this.id.modalClose, 'click', this.modalCloseHandler);
+
 	    // 表示の設定
             this.setDispStringToElement(this.id.btn1, this.dispString.btn1);
             this.setDispStringToElement(this.id.btn2, this.dispString.btn2);
@@ -409,7 +386,6 @@ class modalController {
             this.removeEventListenerFromElement(this.id.btn3, 'click', this.btn3Handler);
             this.removeEventListenerFromElement(this.id.modalBg, 'click', this.modalBgHandler);
             this.removeEventListenerFromElement(this.id.modalClose, 'click', this.modalCloseHandler);
-            this.removeEventListenerFromElement(this.id.editText, 'keydown', this.modalTabHandler);
 
 	    // モーダル無効化
 	    document.getElementById(this.id.modalBg).style.display = 'none';
