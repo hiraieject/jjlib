@@ -1,9 +1,9 @@
 
-const WSSTT_STOPED        = 'stop';
-const WSSTT_CONNECTING    = 'try connecting';
-const WSSTT_CONNECTED     = 'connected';
-const WSSTT_DISCONNECTING = 'disconnecting';
-const WSSTT_DISCONNECTED  = 'disconnected';
+const WSSTT_STOPED        = 'STOP';
+const WSSTT_CONNECTING    = 'TRY CONNECTING';
+const WSSTT_CONNECTED     = 'CONNECTED';
+const WSSTT_DISCONNECTING = 'DISCONNECTING';
+const WSSTT_DISCONNECTED  = 'DISCONNECTED';
 
 class WsAction {
     constructor(parameter = {}) {
