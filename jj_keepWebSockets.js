@@ -29,8 +29,9 @@ class WsAction {
         this.setParameter(parameter);
         const jsonStr = JSON.stringify(this.parameter);
         keepws_controller.send(jsonStr); // dict型をJSONに変換して送信
-        if (enableDbg_dumpSendData) {
-            console.log("Send: " + jsonStr);
+        if (this.parameter.hasOwnProperty('action')
+            && this.parameter.action != 'keepalive') {
+            console.log("Send: " + this.parameter.action);
         }
     }
 }
