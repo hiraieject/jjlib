@@ -62,7 +62,7 @@ class modalController {
             return true;
         });
         this.set_modalBgFunction(() => {
-            return true;
+            return false;
         });
         this.set_modalCloseFunction(() => {
             return true;
