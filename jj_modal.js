@@ -1,14 +1,14 @@
 
 
 
-const modalType_NONE     = 0;
-const modalType_MESSAGE  = 1;
-const modalType_YESNO    = 2;
-const modalType_INPUT    = 3;
-const modalType_EDITOR   = 4;
-const modalType_VIEWER   = 5;
-const modalType_SELECTOR = 6;
-const modalType_USERDEF  = 20;
+const modalType_NONE      = 0;
+const modalType_MESSAGE   = 1;
+const modalType_YESNO     = 2;
+const modalType_INPUT     = 3;
+const modalType_EDITOR    = 4;
+const modalType_VIEWER    = 5;
+const modalType_SELECTOR  = 6;
+const modalType_CUSTOMDIV = 7;
 
 class modalController {
 
@@ -37,6 +37,7 @@ class modalController {
             message1: '', message2: '', message3: '',
             inputText: '', editText: '',
             modalBg: '', modalWindow: '', modalClose: '',
+	    customarea: '', customcontents: '',
         }
         this.dispString = {
             btn1: '', btn2: '', btn3: '',
@@ -130,7 +131,7 @@ class modalController {
             };
             this.setting = {
                 ...this.setting,
-                enableCloseByBGClick: true,
+                enableCloseByBGClick: false,
                 enableCloseByCloseIcon: true,
             };
         }
@@ -155,7 +156,7 @@ class modalController {
             };
             this.setting = {
                 ...this.setting,
-                enableCloseByBGClick: true,
+                enableCloseByBGClick: false,
                 enableCloseByCloseIcon: true,
             };
         }
@@ -179,7 +180,7 @@ class modalController {
                 ...this.setting,
                 width_pct: 80,
                 height_pct: 80,
-                enableCloseByBGClick: true,
+                enableCloseByBGClick: false,
                 enableCloseByCloseIcon: true,
             };
             
@@ -202,7 +203,7 @@ class modalController {
                 ...this.setting,
                 width_pct: 80,
                 height_pct: 80,
-                enableCloseByBGClick: true,
+                enableCloseByBGClick: false,
                 enableCloseByCloseIcon: true,
             };
             
@@ -226,6 +227,23 @@ class modalController {
             this.setting = {
                 ...this.setting,
                 height_pct: 80,
+                enableCloseByBGClick: false,
+                enableCloseByCloseIcon: true,
+            };
+        }
+        else if (modalType == modalType_CUSTOMDIV) {
+            this.id = {
+                ...this.id, // もとの値は残して、以下を書き換える
+                modalBg:    'MODAL_customDiv',
+                modalWindow:'MODAL_customDiv_window',
+                customarea: 'MODAL_customDiv_contentcell',
+                modalClose: 'MODAL_customDiv_close',
+                btn1:       'MODAL_customDiv_btn1',
+                btn2:       'MODAL_customDiv_btn2',
+		customcontents: '',
+            };
+            this.setting = {
+                ...this.setting,
                 enableCloseByBGClick: true,
                 enableCloseByCloseIcon: true,
             };
@@ -249,6 +267,12 @@ class modalController {
         this.modalCloseFunction = fn;
     };
 
+    //
+    set_modalCustomDivId(id) {
+        this.id.customdiv = id;
+    };
+
+    
     // 画面部品イベントハンドラ処理
     btn1Handler() {
         if (this.btn1Function() == true) {
@@ -339,6 +363,19 @@ class modalController {
             }
         }
     }
+
+    setCustomContentsToCustomArea(customarea, customcontents) {
+        // contentcellに表示する内容を更新するコード
+        const area    = document.getElementById(customarea);
+        const content = document.getElementById(customcontents);
+        if (area && content) {
+            area.innerHTML = content.innerHTML;
+        } else {
+            console.log('ERROR setCustomContentsToCustomArea(): getElementById() returned null');
+            console.log('customarea = ' + customarea);
+            console.log('customcontents = ' + customcontents);
+        }
+    }
     
     // モーダル状態有効化処理
     showModal()
@@ -363,6 +400,8 @@ class modalController {
             this.setDispStringToElement(this.id.message2, this.dispString.message2);
             this.setDispStringToElementValue(this.id.inputText, this.dispString.inputText);
             this.setDispStringToElementValue(this.id.editText, this.dispString.editText);
+	    // CUSTOM CONTENTS
+	    this.setCustomContentsToCustomArea(this.id.customarea, this.id.customcontents);
             // 表示を指定サイズにして画面センタリング
             this.setCenterDiv();
             this.setCenterDiv = this.setCenterDiv.bind(this);
